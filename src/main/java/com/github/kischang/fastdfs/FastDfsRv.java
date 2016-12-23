@@ -1,4 +1,4 @@
-package com.kischang.fastdfs;
+package com.github.kischang.fastdfs;
 
 /**
  * FastDFS 文件描述

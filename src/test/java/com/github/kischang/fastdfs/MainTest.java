@@ -1,6 +1,6 @@
-package com.kischang.fastdfs;
+package com.github.kischang.fastdfs;
 
-import com.kischang.fastdfs.exception.FastDFSException;
+import com.github.kischang.fastdfs.exception.FastDFSException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

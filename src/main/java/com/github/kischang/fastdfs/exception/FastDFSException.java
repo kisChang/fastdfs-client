@@ -1,4 +1,4 @@
-package com.kischang.fastdfs.exception;
+package com.github.kischang.fastdfs.exception;
 
 /**
  * FastDFS Exception

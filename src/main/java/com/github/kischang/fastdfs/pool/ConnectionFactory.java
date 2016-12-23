@@ -1,6 +1,6 @@
-package com.kischang.fastdfs.pool;
+package com.github.kischang.fastdfs.pool;
 
-import com.kischang.fastdfs.FastDFSTemplateFactory;
+import com.github.kischang.fastdfs.FastDFSTemplateFactory;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.csource.fastdfs.StorageClient;
 import org.csource.fastdfs.TrackerClient;

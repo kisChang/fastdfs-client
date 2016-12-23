@@ -1,7 +1,7 @@
-package com.kischang.fastdfs;
+package com.github.kischang.fastdfs;
 
-import com.kischang.fastdfs.exception.FastDFSException;
-import com.kischang.fastdfs.pool.PoolConfig;
+import com.github.kischang.fastdfs.exception.FastDFSException;
+import com.github.kischang.fastdfs.pool.PoolConfig;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.TrackerGroup;
 

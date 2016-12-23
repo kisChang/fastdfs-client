@@ -1,4 +1,4 @@
-package com.kischang.fastdfs.pool;
+package com.github.kischang.fastdfs.pool;
 
 /**
  * Pool 连接池配置
