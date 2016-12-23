@@ -1,13 +1,10 @@
 package com.kischang.fastdfs;
 
 import com.kischang.fastdfs.exception.FastDFSException;
+import com.kischang.fastdfs.pool.ConnectionPoolFactory;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.StorageClient;
-import org.csource.fastdfs.StorageServer;
-import org.csource.fastdfs.TrackerClient;
-import org.csource.fastdfs.TrackerServer;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -18,20 +15,10 @@ import java.util.Map;
  */
 public class FastDFSTemplate {
 
-    private StorageClient storageClient;
-    private TrackerClient trackerClient;
-    private TrackerServer trackerServer;
-    private StorageServer storageServer;
+    private ConnectionPoolFactory connPoolFactory;
 
     public FastDFSTemplate(FastDFSTemplateFactory factory) {
-        try {
-            trackerClient = new TrackerClient(factory.getG_tracker_group());
-            trackerServer = trackerClient.getConnection();
-            storageServer = null;
-            storageClient = new StorageClient(trackerServer, storageServer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.connPoolFactory = new ConnectionPoolFactory(factory);
     }
 
 
@@ -97,13 +84,20 @@ public class FastDFSTemplate {
         }
     }
 
-
-
-    private StorageClient getClient() {
-        return storageClient;
+    protected StorageClient getClient() {
+        StorageClient client = null;
+        while (client == null){
+            try {
+                client = connPoolFactory.getClient();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return client;
     }
 
-    private void releaseClient(StorageClient client) {
+    protected void releaseClient(StorageClient client) {
+        connPoolFactory.releaseConnection(client);
     }
 
 }

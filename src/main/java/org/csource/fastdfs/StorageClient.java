@@ -63,7 +63,7 @@ public class StorageClient
 	protected TrackerServer trackerServer;
 	protected StorageServer storageServer;
 	protected byte errno;
-	
+
 /**
 * constructor using global settings in class ClientGlobal
 */
@@ -84,7 +84,15 @@ public class StorageClient
 		this.storageServer = storageServer;
 	}
 
-/**
+	public TrackerServer getTrackerServer() {
+		return trackerServer;
+	}
+
+	public StorageServer getStorageServer() {
+		return storageServer;
+	}
+
+	/**
 * get the error code of last call
 * @return the error code of last call
 */

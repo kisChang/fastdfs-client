@@ -1,6 +1,7 @@
 package com.kischang.fastdfs;
 
 import com.kischang.fastdfs.exception.FastDFSException;
+import com.kischang.fastdfs.pool.PoolConfig;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.TrackerGroup;
 
@@ -33,6 +34,8 @@ public class FastDFSTemplateFactory {
     private List<String> tracker_servers;
 
     private TrackerGroup g_tracker_group;
+
+    private PoolConfig poolConfig = new PoolConfig();
 
     public void init() throws Exception {
 
@@ -86,6 +89,17 @@ public class FastDFSTemplateFactory {
         ClientGlobal.setG_anti_steal_token(this.g_anti_steal_token);
         ClientGlobal.setG_secret_key(this.g_secret_key);
         ClientGlobal.setG_tracker_group(this.g_tracker_group);
+    }
+
+    public PoolConfig getPoolConfig() {
+        if (poolConfig == null){
+            return new PoolConfig();
+        }
+        return poolConfig;
+    }
+
+    public void setPoolConfig(PoolConfig poolConfig) {
+        this.poolConfig = poolConfig;
     }
 
     public void setG_connect_timeout(int g_connect_timeout) {

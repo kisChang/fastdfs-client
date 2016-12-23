@@ -8,6 +8,7 @@
 
 package org.csource.fastdfs;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,7 +20,7 @@ import java.net.Socket;
 * @author Happy Fish / YuQing
 * @version Version 1.11
 */
-public class TrackerServer
+public class TrackerServer implements Closeable
 {
 	protected Socket sock;
 	protected InetSocketAddress inetSockAddr;

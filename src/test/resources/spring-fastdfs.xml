@@ -6,6 +6,12 @@
     <bean id="fastDFSFactory" class="com.kischang.fastdfs.FastDFSTemplateFactory" init-method="init">
         <property name="g_connect_timeout" value="5"/>
         <property name="g_network_timeout" value="30"/>
+        <property name="poolConfig">
+            <bean class="com.kischang.fastdfs.pool.PoolConfig">
+                <property name="maxActive" value="10"/>
+                <property name="maxIdle" value="10"/>
+            </bean>
+        </property>
         <property name="tracker_servers">
             <array>
                 <value>tracker:22122</value>
