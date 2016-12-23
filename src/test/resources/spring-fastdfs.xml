@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="fastDFSFactory" class="com.kischang.fastdfs.FastDFSTemplateFactory" init-method="init">
+        <property name="g_connect_timeout" value="5"/>
+        <property name="g_network_timeout" value="30"/>
+        <property name="tracker_servers">
+            <array>
+                <value>tracker:22122</value>
+            </array>
+        </property>
+    </bean>
+
+    <bean id="fastDFSTemplate" class="com.kischang.fastdfs.FastDFSTemplate">
+        <constructor-arg ref="fastDFSFactory"/>
+    </bean>
+
+</beans>
