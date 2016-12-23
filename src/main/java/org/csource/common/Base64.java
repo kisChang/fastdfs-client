@@ -72,47 +72,47 @@ public class Base64
     * binary value encoded by a given letter of the alphabet 0..63
     */
    private int[] charToValue = new int[256];
-   
+
    private int[] charToPad = new int[4];
-   
+
    /* constructor */
    public Base64()
    {
-   	  this.init('+', '/', '=');
+      this.init('+', '/', '=');
    }
-   
+
    /* constructor */
    public Base64(char chPlus, char chSplash, char chPad, int lineLength)
    {
-   	  this.init(chPlus, chSplash, chPad);
-   	  this.lineLength = lineLength;
+      this.init(chPlus, chSplash, chPad);
+      this.lineLength = lineLength;
    }
 
    public Base64(int lineLength)
    {
-       this.lineLength = lineLength;
+      this.lineLength = lineLength;
    }
 
    /* initialise defaultValueToChar and defaultCharToValue tables */
    private void init(char chPlus, char chSplash, char chPad)
    {
-   		int index = 0;
+      int index = 0;
       // build translate this.valueToChar table only once.
       // 0..25 -> 'A'..'Z'
       for ( int i='A'; i<='Z'; i++) {
          this.valueToChar[index++] = (char)i;
       }
-      
+
       // 26..51 -> 'a'..'z'
       for ( int i='a'; i<='z'; i++ ) {
          this.valueToChar[index++] = (char)i;
       }
-      
+
       // 52..61 -> '0'..'9'
       for ( int i='0'; i<='9'; i++) {
          this.valueToChar[index++] = (char)i;
       }
-      
+
       this.valueToChar[index++] = chPlus;
       this.valueToChar[index++] = chSplash;
 
@@ -130,7 +130,7 @@ public class Base64
       this.charToValue[chPad] = PAD;
       java.util.Arrays.fill(this.charToPad, chPad);
    }
-   
+
    /**
     * Encode an arbitrary array of bytes as Base64 printable ASCII.
     * It will be broken into lines of 72 chars each.  The last line is not
@@ -139,20 +139,20 @@ public class Base64
     * exclusive of \n.  It is padded out with =.
     */
    public String encode(byte[] b) throws IOException
-      {
+   {
       // Each group or partial group of 3 bytes becomes four chars
       // covered quotient
       int outputLength = ((b.length + 2) / 3) * 4;
 
       // account for trailing newlines, on all but the very last line
       if ( lineLength != 0 )
+      {
+         int lines =  ( outputLength + lineLength -1 ) / lineLength - 1;
+         if ( lines > 0 )
          {
-          int lines =  ( outputLength + lineLength -1 ) / lineLength - 1;
-          if ( lines > 0 )
-            {
-             outputLength += lines  * lineSeparator.length();
-            }
+            outputLength += lines  * lineSeparator.length();
          }
+      }
 
       // must be local for recursion to work.
       StringBuffer sb = new StringBuffer( outputLength );
@@ -164,19 +164,19 @@ public class Base64
       int len = (b.length / 3) * 3;
       int leftover = b.length - len;
       for ( int i=0; i<len; i+=3 )
-         {
+      {
          // Start a new line if next 4 chars won't fit on the current line
          // We can't encapsulete the following code since the variable need to
          // be local to this incarnation of encode.
          linePos += 4;
          if ( linePos > lineLength )
-            {
+         {
             if ( lineLength != 0 )
-               {
+            {
                sb.append(lineSeparator);
-               }
-            linePos = 4;
             }
+            linePos = 4;
+         }
 
          // get next three bytes in unsigned form lined up,
          // in big-endian order
@@ -202,11 +202,11 @@ public class Base64
          sb.append( valueToChar[c1]);
          sb.append( valueToChar[c2]);
          sb.append( valueToChar[c3]);
-         }
+      }
 
       // deal with leftover bytes
       switch ( leftover )
-         {
+      {
          case 0:
          default:
             // nothing to do
@@ -217,19 +217,19 @@ public class Base64
             // Start a new line if next 4 chars won't fit on the current line
             linePos += 4;
             if ( linePos > lineLength )
-               {
+            {
 
                if ( lineLength != 0 )
-                  {
+               {
                   sb.append(lineSeparator);
-                  }
-               linePos = 4;
                }
+               linePos = 4;
+            }
 
             // Handle this recursively with a faked complete triple.
             // Throw away last two chars and replace with ==
             sb.append(encode(new byte[] {b[len], 0, 0}
-                            ).substring(0,2));
+            ).substring(0,2));
             sb.append("==");
             break;
 
@@ -238,52 +238,52 @@ public class Base64
             // Start a new line if next 4 chars won't fit on the current line
             linePos += 4;
             if ( linePos > lineLength )
-               {
+            {
                if ( lineLength != 0 )
-                  {
+               {
                   sb.append(lineSeparator);
-                  }
-               linePos = 4;
                }
+               linePos = 4;
+            }
             // Handle this recursively with a faked complete triple.
             // Throw away last char and replace with =
             sb.append(encode(new byte[] {b[len], b[len+1], 0}
-                            ).substring(0,3));
+            ).substring(0,3));
             sb.append("=");
             break;
 
-         } // end switch;
+      } // end switch;
 
       if ( outputLength != sb.length() )
-         {
+      {
          System.out.println("oops: minor program flaw: output length mis-estimated");
          System.out.println("estimate:" + outputLength);
          System.out.println("actual:" + sb.length());
-         }
+      }
       return sb.toString();
-      }// end encode
+   }// end encode
 
    /**
     * decode a well-formed complete Base64 string back into an array of bytes.
     * It must have an even multiple of 4 data characters (not counting \n),
     * padded out with = as needed.
     */
-   public byte[] decodeAuto( String s) {   	 
-   	 int nRemain = s.length() % 4;
-   	 if (nRemain == 0) {
-   	 	 return this.decode(s);
-   	 } else {
-   	   return this.decode(s + new String(this.charToPad, 0, 4 - nRemain));
-   	 }
+   public byte[] decodeAuto( String s) {
+      int nRemain = s.length() % 4;
+      if (nRemain == 0) {
+         return this.decode(s);
+      } else {
+         return this.decode(s + new String(this.charToPad, 0, 4 - nRemain));
+      }
    }
-   
+
    /**
     * decode a well-formed complete Base64 string back into an array of bytes.
     * It must have an even multiple of 4 data characters (not counting \n),
     * padded out with = as needed.
     */
    public byte[] decode( String s)
-      {
+   {
 
       // estimate worst case size of output array, no embedded newlines.
       byte[] b = new byte[(s.length() / 4) * 3];
@@ -300,13 +300,13 @@ public class Base64
       int len = s.length();
       int dummies = 0;
       for ( int i=0; i<len; i++ )
-         {
+      {
 
          int c = s.charAt(i);
          int value  = (c <= 255) ? charToValue[c] : IGNORE;
          // there are two magic values PAD (=) and IGNORE.
          switch ( value )
-            {
+         {
             case IGNORE:
                // e.g. \n, just ignore it.
                break;
@@ -318,7 +318,7 @@ public class Base64
             default:
                /* regular value character */
                switch ( cycle )
-                  {
+               {
                   case 0:
                      combined = value;
                      cycle = 1;
@@ -352,24 +352,24 @@ public class Base64
                      j += 3;
                      cycle = 0;
                      break;
-                  }
+               }
                break;
-            }
-         } // end for
-      if ( cycle != 0 )
-         {
-         throw new ArrayIndexOutOfBoundsException ("Input to decode not an even multiple of 4 characters; pad with =.");
          }
+      } // end for
+      if ( cycle != 0 )
+      {
+         throw new ArrayIndexOutOfBoundsException ("Input to decode not an even multiple of 4 characters; pad with =.");
+      }
       j -= dummies;
       if ( b.length != j )
-         {
+      {
          byte[] b2 = new byte[j];
          System.arraycopy(b, 0, b2, 0, j);
          b = b2;
-         }
+      }
       return b;
 
-      }// end decode
+   }// end decode
 
    /**
     * determines how long the lines are that are generated by encode.
@@ -377,9 +377,9 @@ public class Base64
     * @param length 0 means no newlines inserted. Must be a multiple of 4.
     */
    public void setLineLength(int length)
-      {
+   {
       this.lineLength = (length/4) * 4;
-      }
+   }
 
    /**
     * How lines are separated.
@@ -389,9 +389,9 @@ public class Base64
     * Could be any chars not in set A-Z a-z 0-9 + /.
     */
    public  void setLineSeparator(String lineSeparator)
-      {
+   {
       this.lineSeparator = lineSeparator;
-      }
+   }
 
    /**
     * Marker value for chars we just ignore, e.g. \n \r high ascii
@@ -440,100 +440,35 @@ public class Base64
     * debug display array
     */
    public static void display (byte[] b)
-      {
+   {
       for ( int i=0; i<b.length; i++ )
-         {
+      {
          System.out.print( (char)b[i]);
-         }
-      System.out.println();
       }
+      System.out.println();
+   }
 
    /**
-     * test driver
+    * test driver
     */
-   public static void main(String[] args)
-   {
-      test();
-      System.exit(1);
-
-      if ( debug )
-      {
-         try
-         {
-            Base64 b64 = new Base64();
-            String str = "agfrtu¿¦etÊ²1234¼Ù´óerty¿Õ234·¢¿¦2344Ê²µÄ";
-            String str64 = "";
-
-            //encode
-            str64 = b64.encode(str.getBytes());
-            System.out.println(str64);
-
-            //decode
-            byte[] theBytes = b64.decode(str64);
-            show(theBytes);
-            String rst = new String(theBytes);
-            System.out.println(rst);
-            System.out.println(str);
-         }
-         catch(Exception e)
-         {
-            e.printStackTrace();
-         }
-         //getBytes(String charsetName);
-/*
-         byte[] a = { (byte)0xfc, (byte)0x0f, (byte)0xc0};
-         byte[] b = { (byte)0x03, (byte)0xf0, (byte)0x3f};
-         byte[] c = { (byte)0x00, (byte)0x00, (byte)0x00};
-         byte[] d = { (byte)0xff, (byte)0xff, (byte)0xff};
-         byte[] e = { (byte)0xfc, (byte)0x0f, (byte)0xc0, (byte)1};
-         byte[] f = { (byte)0xfc, (byte)0x0f, (byte)0xc0, (byte)1, (byte)2};
-         byte[] g = { (byte)0xfc, (byte)0x0f, (byte)0xc0, (byte)1, (byte)2, (byte)3};
-         byte[] h = "AAAAAAAAAAB".getBytes();
-
-
-
-         show(a);
-         show(b);
-         show(c);
-         show(d);
-         show(e);
-         show(f);
-         show(g);
-         show(h);
-         Base64 b64 = new Base64();
-         show(b64.decode(b64.encode(a)));
-         show(b64.decode(b64.encode(b)));
-         show(b64.decode(b64.encode(c)));
-         show(b64.decode(b64.encode(d)));
-         show(b64.decode(b64.encode(e)));
-         show(b64.decode(b64.encode(f)));
-         show(b64.decode(b64.encode(g)));
-         show(b64.decode(b64.encode(h)));
-         b64.setLineLength(8);
-         show((b64.encode(h)).getBytes());
-*/
-         }
-   }// end main
-
    public static void test()
    {
-       try
-       {
-          Base64 b64 = new Base64();
+      try
+      {
+         Base64 b64 = new Base64();
 
-          //encode
-          //str64 = b64.encode(str.getBytes());
-          //System.out.println(str64);
+         //encode
+         //str64 = b64.encode(str.getBytes());
+         //System.out.println(str64);
 
-          String str64 = "CwUEFYoAAAADjQMC7ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267EI=";
-          //decode
-          byte[] theBytes = b64.decode(str64);
-          show(theBytes);
-       }
-       catch(Exception e)
-       {
-          e.printStackTrace();
-       }
+         String str64 = "CwUEFYoAAAADjQMC7ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267ELJiY6w05267EI=";
+         //decode
+         byte[] theBytes = b64.decode(str64);
+         show(theBytes);
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
+      }
    }
 } // end Base64
-
