@@ -49,13 +49,16 @@ public class FastDFSTemplate {
                 index ++;
             }
         }
+        StorageClient client = getClient();
         try {
-            String[] uploadResults = storageClient.upload_file(data, ext, valuePairs);
+            String[] uploadResults = client.upload_file(data, ext, valuePairs);
             String groupName = uploadResults[0];
             String remoteFileName = uploadResults[1];
             return new FastDfsRv(groupName, remoteFileName);
         } catch (Exception e) {
             throw new FastDFSException(e.getMessage(), e, 0);
+        } finally {
+            releaseClient(client);
         }
     }
 
@@ -65,10 +68,13 @@ public class FastDFSTemplate {
     }
 
     public byte[] loadFile(String groupName, String remoteFileName) throws FastDFSException {
+        StorageClient client = getClient();
         try {
-            return storageClient.download_file(groupName, remoteFileName);
+            return client.download_file(groupName, remoteFileName);
         } catch (Exception e) {
             throw new FastDFSException(e.getMessage(), e, 0);
+        } finally {
+            releaseClient(client);
         }
     }
 
@@ -78,13 +84,26 @@ public class FastDFSTemplate {
 
     public void deleteFile(String groupName, String remoteFileName) throws FastDFSException {
         int code;
+        StorageClient client = getClient();
         try {
-            code = storageClient.delete_file(groupName, remoteFileName);
+            code = client.delete_file(groupName, remoteFileName);
         } catch (Exception e) {
             throw new FastDFSException(e.getMessage(), e, 0);
+        } finally {
+            releaseClient(client);
         }
         if (code != 0){
             throw new FastDFSException(code);
         }
     }
+
+
+
+    private StorageClient getClient() {
+        return storageClient;
+    }
+
+    private void releaseClient(StorageClient client) {
+    }
+
 }
