@@ -16,16 +16,15 @@
 
     <licenses>
         <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution>repo</distribution>
+            <name>The GNU Lesser General Public License, version 3.0</name>
+            <url>http://opensource.org/licenses/LGPL-3.0</url>
         </license>
     </licenses>
     <scm>
         <tag>master</tag>
-        <url>git@github.com:kisChang/fastdfs-client.git</url>
-        <connection>scm:git:git@github.com::kisChang/fastdfs-client.git</connection>
-        <developerConnection>scm:git:git@github.com::kisChang/fastdfs-client.git</developerConnection>
+        <url>https://github.com/kisChang/fastdfs-client</url>
+        <connection>scm:git:https://github.com/kisChang/fastdfs-client</connection>
+        <developerConnection>scm:git:https://github.com/kisChang/fastdfs-client</developerConnection>
     </scm>
     <developers>
         <developer>
@@ -42,7 +41,6 @@
         <jdk-version>1.7</jdk-version>
         <skip-test>true</skip-test>
     </properties>
-
     <dependencies>
         <!--Test utils-->
         <dependency>
@@ -90,6 +88,21 @@
                                 <phase>package</phase>
                                 <goals>
                                     <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
